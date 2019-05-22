@@ -1,17 +1,23 @@
-var express = require('express');
+const express = require('express');
+const cors = require("cors");
+const bodyParser = require('body-parser');
+const userRouter = require('./routers/user');
+const bookRouter = require('./routers/book');
+const requestRouter = require('./routers/request');
+
+
 require('./db/mongoose');
-var userRouter = require('./routers/user');
-var bookRouter = require('./routers/book');
-var requestRouter = require('./routers/request');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
-var app = express();
-app.use(express.json());
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(userRouter);
 app.use(bookRouter);
 app.use(requestRouter);
 
 app.listen(port, () => {
-  console.log("App is listening port number 3000")
+  console.log(`App is listening port number ${port}`);
 });

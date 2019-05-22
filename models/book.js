@@ -5,7 +5,7 @@ var Request = require('./request');
 var bookSchema = new mongoose.Schema({
   title: {
     type: String,
-    required:true,
+    required: true,
     trim: true,
   },
   author: {
@@ -21,16 +21,16 @@ var bookSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  owner:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    }
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 });
 
-bookSchema.pre('remove', async function(next){
+bookSchema.pre('remove', async function (next) {
   book = this;
-  await Request.deleteMany({ $or: [ { requestedBookId: book._id }, { exchangeBookId: book._id } ] });
+  await Request.deleteMany({ $or: [{ requestedBookId: book._id }, { exchangeBookId: book._id }] });
   next();
 });
 var Book = new mongoose.model('Book', bookSchema);

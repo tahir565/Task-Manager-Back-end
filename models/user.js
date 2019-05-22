@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 var Book = require('./book');
 
 var userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
     trim: true,
     required: [true, 'User name is required']
@@ -23,9 +23,9 @@ var userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
     required: [true, 'User email is required'],
-    validate(email){
-      if(!validator.isEmail(email)){
-          throw new Error('Email is invalid!')
+    validate(email) {
+      if (!validator.isEmail(email)) {
+        throw new Error('Email is invalid!')
       }
     }
   },
@@ -46,20 +46,20 @@ var userSchema = new mongoose.Schema({
   //   }
   // }]
   tokens: [{
-    token:{
+    token: {
       type: String,
       required: true
     }
   }]
-},{
-  timestamps: true
-});
+}, {
+    timestamps: true
+  });
 
-userSchema.methods.generateAuthToken = async function(){
+userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = await jwt.sign({_id: user._id}, 'thisismysecret');
+  const token = await jwt.sign({ _id: user._id }, 'thisismysecret');
 
-  user.tokens = user.tokens.concat({token});
+  user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
 }
@@ -81,19 +81,19 @@ userSchema.statics.findByCredentials = async (email, password) => {
 }
 
 // Hash the plaintext password before saving it to database
-userSchema.pre('save', async function(next){
+userSchema.pre('save', async function (next) {
   const user = this;
 
-  if(user.isModified('password')){
+  if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8);
   }
 
   next();
 })
 
-userSchema.pre('remove', async function(next){
+userSchema.pre('remove', async function (next) {
   const user = this;
-  books = await Book.find({owner: user._id});
+  books = await Book.find({ owner: user._id });
   books.map(async book => await book.remove());
   next();
 });

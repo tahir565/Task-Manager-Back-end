@@ -11,7 +11,7 @@ var requestsSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  exchangeBookId:{
+  exchangeBookId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Book',
   },
@@ -21,6 +21,6 @@ var requestsSchema = new mongoose.Schema({
   }
 });
 
-var Request = new mongoose.model('Request',requestsSchema);
+var Request = new mongoose.model('Request', requestsSchema);
 
 module.exports = Request;
